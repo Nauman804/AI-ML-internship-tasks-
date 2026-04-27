@@ -45,11 +45,7 @@ Welcome to my official internship repository! This project showcases a series of
 
 🚀 Installation & Setup
 Clone the Project:
-
-Bash
-git clone [https://github.com/Noman-Gokboru/DevelopersHub-Internship.git](https://github.com/Noman-Gokboru/DevelopersHub-Internship.git)
-Install Libraries:
-
+git clone [https://github.com/Nauman804/AI-ML-internship-tasks-](https://github.com/Nauman804/AI-ML-internship-tasks-)Install Libraries:
 Bash
 pip install -r requirements.txt
 Run Flask App (Task 3):
