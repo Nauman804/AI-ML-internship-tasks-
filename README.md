@@ -45,14 +45,23 @@ Welcome to my official internship repository! This project showcases a series of
 
 🚀 Installation & Setup
 Clone the Project:
-git clone [https://github.com/Nauman804/AI-ML-internship-tasks-](https://github.com/Nauman804/AI-ML-internship-tasks-)Install Libraries:
+git clone [https://github.com/Nauman804/AI-ML-internship-tasks-](https://github.com/Nauman804/AI-ML-internship-tasks-)
+
+
+Install Libraries:
+
 Bash
+
 pip install -r requirements.txt
+
 Run Flask App (Task 3):
 
 Bash
+
 python Task_03_Heart_Disease_Web_App/app.py
+
 Setup Groq API (Task 4):
+
 Ensure your GROQ_API_KEY is set in your environment variables.
 
 👨‍💻 Developed By
