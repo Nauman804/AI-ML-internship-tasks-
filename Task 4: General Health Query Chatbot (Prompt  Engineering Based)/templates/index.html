@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>MediBot — AI Health Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Satoshi:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+<button class="menu-toggle" id="menuToggle" aria-label="Toggle sidebar">☰</button>
+
+<div class="shell">
+
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="10" y="2" width="4" height="20" rx="2"/><rect x="2" y="10" width="20" height="4" rx="2"/></svg>
+      </div>
+      <div class="logo-text-wrap">
+        <div class="logo-name">MediBot</div>
+        <div class="logo-sub">AI Health Assistant</div>
+      </div>
+    </div>
+
+    <div class="sec-label">Chat Mode</div>
+    <div class="mode-row">
+      <button class="mode-btn active" data-mode="general">General</button>
+      <button class="mode-btn" data-mode="symptoms">Symptoms</button>
+      <button class="mode-btn" data-mode="meds">Meds</button>
+    </div>
+
+    <div class="s-div"></div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-val" id="msgCount">0</div>
+        <div class="stat-lbl">Messages</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="sessionTime">0m</div>
+        <div class="stat-lbl">Session</div>
+      </div>
+    </div>
+
+    <div class="s-div"></div>
+    <div class="sec-label">Quick Questions</div>
+
+    <button class="quick-btn" data-q="What causes a sore throat and how can I treat it at home?">
+      <span class="qicon">🤧</span>Sore throat causes
+    </button>
+    <button class="quick-btn" data-q="Is paracetamol safe for children? What is the correct dosage?">
+      <span class="qicon">💊</span>Paracetamol for kids
+    </button>
+    <button class="quick-btn" data-q="How to lower blood pressure naturally without medication?">
+      <span class="qicon">❤️</span>Lower blood pressure
+    </button>
+    <button class="quick-btn" data-q="What are the early warning signs and symptoms of diabetes?">
+      <span class="qicon">🩸</span>Diabetes symptoms
+    </button>
+    <button class="quick-btn" data-q="How much water should a healthy adult drink per day?">
+      <span class="qicon">💧</span>Daily water intake
+    </button>
+    <button class="quick-btn" data-q="What are natural remedies and tips for headaches and migraines?">
+      <span class="qicon">🧠</span>Headache remedies
+    </button>
+    <button class="quick-btn" data-q="Which foods are best for boosting the immune system?">
+      <span class="qicon">🛡️</span>Immune boosting foods
+    </button>
+    <button class="quick-btn" data-q="How many hours of sleep does a healthy adult need each night?">
+      <span class="qicon">😴</span>Healthy sleep habits
+    </button>
+
+    <div class="s-div"></div>
+
+    <div class="disclaimer">
+      <div class="disclaimer-ico">⚠️</div>
+      <p>MediBot provides general health information only. Always consult a licensed doctor for personal medical advice.</p>
+    </div>
+
+    <div class="sidebar-actions">
+      <button class="action-btn new-btn" id="newChatBtn">+ New Chat</button>
+      <button class="action-btn del-btn" id="clearBtn">🗑 Clear</button>
+    </div>
+
+  </aside>
+
+  <!-- ══════════ MAIN CHAT ══════════ -->
+  <main class="chat-col">
+
+    <header class="chat-header">
+      <div class="hdr-left">
+        <div class="online-ring"></div>
+        <div>
+          <div class="hdr-title">Health Assistant</div>
+          <div class="hdr-sub" id="modeLabel">General Health Mode · Online</div>
+        </div>
+      </div>
+      <div class="hdr-right">
+        <div class="model-pill">Llama 3 · Groq</div>
+        <button class="hdr-btn" id="voiceBtn" title="Voice input (experimental)">🎤</button>
+        <button class="hdr-btn" id="exportBtn" title="Export chat as text">📥</button>
+      </div>
+    </header>
+
+    <div class="msgs-scroll" id="msgsScroll">
+
+      <!-- Welcome screen -->
+      <div class="welcome" id="welcomeScreen">
+        <div class="w-orb">
+          <svg viewBox="0 0 48 48" fill="currentColor"><rect x="20" y="4" width="8" height="40" rx="4"/><rect x="4" y="20" width="40" height="8" rx="4"/></svg>
+        </div>
+        <h2 class="w-title">Hello, I'm MediBot 👋</h2>
+        <p class="w-desc">Your AI-powered general health assistant. Ask me about symptoms, medications, wellness tips, nutrition, and more.</p>
+        <div class="w-chips">
+          <span class="w-chip">Symptoms</span>
+          <span class="w-chip">Medications</span>
+          <span class="w-chip">Nutrition</span>
+          <span class="w-chip">Mental Health</span>
+          <span class="w-chip">First Aid</span>
+        </div>
+        <div class="w-suggest-grid">
+          <div class="w-sug-card" data-q="What are the symptoms of flu vs common cold?">
+            <div class="sug-ico">🤒</div>
+            <div class="sug-q">Flu vs cold — what's the difference?</div>
+          </div>
+          <div class="w-sug-card" data-q="What vitamins should I take daily for good health?">
+            <div class="sug-ico">💊</div>
+            <div class="sug-q">Daily vitamins for good health</div>
+          </div>
+          <div class="w-sug-card" data-q="How can I improve my sleep quality naturally?">
+            <div class="sug-ico">😴</div>
+            <div class="sug-q">Improve sleep quality naturally</div>
+          </div>
+          <div class="w-sug-card" data-q="What are the best foods for heart health?">
+            <div class="sug-ico">❤️</div>
+            <div class="sug-q">Best foods for heart health</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="msgList"></div>
+
+      <!-- Typing indicator -->
+      <div class="typing-row hidden" id="typingRow">
+        <div class="avatar sm">
+          <svg viewBox="0 0 24 24" fill="currentColor"><rect x="9.5" y="2" width="5" height="20" rx="2.5"/><rect x="2" y="9.5" width="20" height="5" rx="2.5"/></svg>
+        </div>
+        <div>
+          <div class="typing-bubble"><span></span><span></span><span></span></div>
+          <div class="typing-lbl">MediBot is thinking…</div>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="scroll-btn" id="scrollBtn" title="Jump to latest">↓</button>
+
+    <div class="input-area">
+      <div class="input-toolbar">
+        <button class="tool-btn" data-inject="Regarding symptoms: ">🩺 Symptoms</button>
+        <button class="tool-btn" data-inject="Regarding medication: ">💊 Medications</button>
+        <button class="tool-btn" data-inject="Regarding diet and nutrition: ">🥗 Diet</button>
+        <button class="tool-btn" data-inject="Regarding mental health: ">🧠 Mental Health</button>
+        <button class="tool-btn" data-inject="Regarding first aid: ">🩹 First Aid</button>
+      </div>
+      <div class="input-row">
+        <textarea id="userInput" placeholder="Ask a health question…" rows="1" maxlength="600"></textarea>
+        <button class="send-btn" id="sendBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+      <div class="input-bottom">
+        <div class="char-info"><span id="charCount">0</span>/600</div>
+        <div class="powered-by">
+          <div class="powered-dot"></div>Powered by Groq · Llama 3
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ══════════ RIGHT PANEL ══════════ -->
+  <aside class="right-panel">
+
+    <!-- BMI Calculator -->
+    <div class="panel-section">
+      <div class="panel-title">⚖️ BMI Calculator</div>
+      <div class="bmi-inputs">
+        <div class="bmi-field">
+          <label>Weight (kg)</label>
+          <input class="bmi-input" id="bmiWeight" type="number" placeholder="70" min="20" max="300"/>
+        </div>
+        <div class="bmi-field">
+          <label>Height (cm)</label>
+          <input class="bmi-input" id="bmiHeight" type="number" placeholder="170" min="100" max="250"/>
+        </div>
+      </div>
+      <div class="bmi-result" id="bmiResult">
+        <div class="bmi-placeholder">Enter weight &amp; height above</div>
+      </div>
+      <div class="bmi-bar-wrap"><div class="bmi-bar" id="bmiBar"></div></div>
+      <button class="calc-btn" id="calcBmi">Calculate BMI</button>
+    </div>
+
+    <!-- Symptom Checker -->
+    <div class="panel-section">
+      <div class="panel-title">🩺 Symptom Checker</div>
+      <div class="panel-sub">Tap to select symptoms</div>
+      <div class="symptom-chips">
+        <div class="sym-chip" data-sym="Fever">🌡️ Fever</div>
+        <div class="sym-chip" data-sym="Headache">🧠 Headache</div>
+        <div class="sym-chip" data-sym="Cough">😷 Cough</div>
+        <div class="sym-chip" data-sym="Fatigue">😴 Fatigue</div>
+        <div class="sym-chip" data-sym="Nausea">🤢 Nausea</div>
+        <div class="sym-chip" data-sym="Sore throat">🤧 Sore throat</div>
+        <div class="sym-chip" data-sym="Body ache">💪 Body ache</div>
+        <div class="sym-chip" data-sym="Runny nose">👃 Runny nose</div>
+        <div class="sym-chip" data-sym="Dizziness">😵 Dizziness</div>
+        <div class="sym-chip" data-sym="Loss of appetite">🍽️ No appetite</div>
+      </div>
+      <button class="sym-check-btn" id="symCheckBtn">Ask MediBot →</button>
+    </div>
+
+    <!-- Daily Targets -->
+    <div class="panel-section">
+      <div class="panel-title">📊 Daily Targets</div>
+      <div class="metric-grid">
+        <div class="metric-card"><div class="metric-ico">🚶</div><div class="metric-val">10K</div><div class="metric-lbl">Steps</div></div>
+        <div class="metric-card"><div class="metric-ico">💧</div><div class="metric-val">2.5L</div><div class="metric-lbl">Water</div></div>
+        <div class="metric-card"><div class="metric-ico">😴</div><div class="metric-val">8h</div><div class="metric-lbl">Sleep</div></div>
+        <div class="metric-card"><div class="metric-ico">🍽️</div><div class="metric-val">2000</div><div class="metric-lbl">Calories</div></div>
+      </div>
+    </div>
+
+    <!-- Emergency Numbers -->
+    <div class="panel-section">
+      <div class="panel-title">🚨 Emergency Numbers</div>
+      <div class="emg-list">
+        <div class="emg-item">
+          <div class="emg-info"><div class="emg-name">Rescue (PK)</div><div class="emg-num">1122</div></div>
+          <button class="emg-call" onclick="window.location.href='tel:1122'">CALL</button>
+        </div>
+        <div class="emg-item">
+          <div class="emg-info"><div class="emg-name">Ambulance</div><div class="emg-num">115</div></div>
+          <button class="emg-call" onclick="window.location.href='tel:115'">CALL</button>
+        </div>
+        <div class="emg-item">
+          <div class="emg-info"><div class="emg-name">Umang Helpline</div><div class="emg-num">0311-7786264</div></div>
+          <button class="emg-call" onclick="window.location.href='tel:03117786264'">CALL</button>
+        </div>
+        <div class="emg-item">
+          <div class="emg-info"><div class="emg-name">Edhi Foundation</div><div class="emg-num">115</div></div>
+          <button class="emg-call" onclick="window.location.href='tel:115'">CALL</button>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
